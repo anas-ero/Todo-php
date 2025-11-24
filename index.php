@@ -1,34 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <title>Document</title>
-</head>
-<body class="bg-light row">
-    <form class="container" method="post">
-        <div class="bg-dark py-3 ">
-            <h1 class="text-center text-white">To-Do List</h1>
-        </div>
+<?php
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'todolist');
+define('DB_HOST', '127.0.0.1');
+define('DB_PORT', '3306');
 
-        <div class="d-flex justify-content-center mt-4">
-            <input type="text" placeholder="Task Title.." class="form-control mt-4" name="title">
-            <button class=" btn btn-primary mt-4" value="new" name="action">Add</button>
-        </div>
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+};
+
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    if (isset($_POST['action'])) {
+        $action = $_POST['action'];
+
+        if ($action === "new") {
+            $title = $conn->$_POST['title'];
+            if (!empty($title)) {
+                $conn->query("INSERT INTO todolist (title) VALUES ('$title')");
+            }
+        }
+
+        if ($action === "delete") {
+            $id = $_POST["id"];
+            $conn->query("DELETE FROM todolist WHERE id= $id");
+        }
+
+        if ($action === "toggle") {
+            $id = $_POST["id"];
+            $conn->query("UPDATE todolist SET done = 1 - done WHERE id = $id");
+        }
+    }
+}
+
+$tasks = [];
+$result = $conn->query("SELECT * FROM todolist order by created_at DESC");
+
+
+while ($row = $result->fetch_assoc()) {
+    $taches[] = $row;
+}
+
+?>
+
+ 
+      
         
-            <ul class="list-group mt-4">
-                <?php foreach
-                
-                
-                
-                
-                ?>
-            </ul>
-    </form>
-    
-    
-    
+
+</div>
+
 </body>
+
 </html>
+
+
+
+
+
+
+?>
