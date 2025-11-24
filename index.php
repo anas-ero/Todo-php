@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 define('DB_USER', 'root');
 define('DB_PASS', '');
@@ -19,9 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $action = $_POST['action'];
 
         if ($action === "new") {
-            $title = $conn->$_POST['title'];
-            if (!empty($title)) {
-                $conn->query("INSERT INTO todolist (title) VALUES ('$title')");
+            $title = trim($_POST['title'] ?? '');
+            if ($title !== '') {
+                $stmt = $conn->prepare("INSERT INTO todolist (title) VALUES (?)");
+                $stmt->bind_param("s", $title);
+                $stmt->execute();
+                $stmt->close();
             }
         }
 
@@ -38,33 +41,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 $tasks = [];
-$result = $conn->query("SELECT * FROM todolist order by created_at DESC");
-
-
 while ($row = $result->fetch_assoc()) {
-    $taches[] = $row;
+    $tasks[] = $row;
 }
 
 ?>
 
- 
-    
 
-
-
-
-
- 
 
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <title>Document</title>
 </head>
+
 <body class="bg-light row">
     <form class="container" method="post">
         <div class="bg-dark py-3 ">
@@ -74,11 +69,8 @@ while ($row = $result->fetch_assoc()) {
         <div class="d-flex justify-content-center mt-4">
             <input type="text" placeholder="Task Title.." class="form-control mt-4" name="title">
             <button class=" btn btn-primary mt-4" value="new" name="action">Add</button>
-        </div>
-
-        
             <ul class="list-group mt-4">
-                <?php foreach ($tasks as $t) ?>
+                <?php foreach ($tasks as $t): ?>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
                             <form method="post" class="d-inline">
@@ -96,15 +88,16 @@ while ($row = $result->fetch_assoc()) {
                             <input type="hidden" name="id" value="<?php echo $t['id']; ?>">
                             <button class="btn btn-danger btn-sm" value="delete" name="action">Delete</button>
                         </form>
-                
-                
-                
-                
-                ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+
+
             </ul>
     </form>
-    
-    
-    
+
+
+
 </body>
+
 </html>
