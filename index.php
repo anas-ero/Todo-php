@@ -13,16 +13,18 @@
         </div>
 
         <div class="d-flex justify-content-center mt-4">
-            <input type="text" placeholder="Task Title.." class="form-control mt-4">
-            <button class=" btn btn-primary mt-4" value="add" name="add">Add</button>
+            <input type="text" placeholder="Task Title.." class="form-control mt-4" name="title">
+            <button class=" btn btn-primary mt-4" value="new" name="action">Add</button>
         </div>
 
         
             <ul class="list-group mt-4">
-                <li class="list-group-item">Task1
-                    <button class="btn btn-primary btn-sm">Done</button>
-                    <button class="btn btn-danger btn-sm">X</button>
-                </li>
+                <?php foreach
+                
+                
+                
+                
+                ?>
             </ul>
     </form>
     
