@@ -18,14 +18,7 @@
         </div>
 
         
-            <ul class="list-group mt-4">
-                <?php foreach
-                
-                
-                
-                
-                ?>
-            </ul>
+           
     </form>
     
     
